@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NecroText - Teletext rises from the grave</title>
+  <meta name="description" content="A Teletext revival for the web. Ceefax and Oracle style pages with live news, weather, games and a haunted layer.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main id="tv">
+    <div id="bezel">
+      <div id="screen" role="img" aria-label="Teletext page">
+        <canvas id="teletext" width="800" height="600"></canvas>
+        <div class="fx scanlines"></div>
+        <div class="fx vignette"></div>
+        <div class="fx glass"></div>
+      </div>
+    </div>
+    <nav id="remote" aria-label="Remote control">
+      <div class="colour-keys">
+        <button data-key="r" class="red" aria-label="Red">R</button>
+        <button data-key="g" class="green" aria-label="Green">G</button>
+        <button data-key="y" class="yellow" aria-label="Yellow">Y</button>
+        <button data-key="b" class="cyan" aria-label="Cyan (B)">B</button>
+      </div>
+      <div class="digits">
+        <button data-key="1">1</button><button data-key="2">2</button><button data-key="3">3</button>
+        <button data-key="4">4</button><button data-key="5">5</button><button data-key="6">6</button>
+        <button data-key="7">7</button><button data-key="8">8</button><button data-key="9">9</button>
+        <button data-key="Escape" aria-label="Index">IDX</button><button data-key="0">0</button><button data-key="Enter">OK</button>
+      </div>
+      <div class="arrows">
+        <button data-key="ArrowLeft" aria-label="Previous subpage">&lt;</button>
+        <button data-key="ArrowUp" aria-label="Next page">PG+</button>
+        <button data-key="ArrowDown" aria-label="Previous page">PG-</button>
+        <button data-key="ArrowRight" aria-label="Next subpage">&gt;</button>
+      </div>
+      <div class="extras">
+        <button data-key="x" title="Reveal">REVEAL</button>
+        <button data-key="s" title="Seance">SEANCE</button>
+        <button data-key="c" title="CRT">CRT</button>
+        <button data-key="m" title="Sound">SOUND</button>
+        <button data-key="h" title="Help">HELP</button>
+      </div>
+    </nav>
+  </main>
+  <div id="help" hidden>
+    <h2>NecroText keys</h2>
+    <ul>
+      <li><b>0-9</b> type a page number</li>
+      <li><b>R G Y B</b> or <b>F1-F4</b> colour keys</li>
+      <li><b>Up / Down</b> next / previous page</li>
+      <li><b>Left / Right</b> subpages</li>
+      <li><b>X</b> reveal hidden text</li>
+      <li><b>S</b> seance mode</li>
+      <li><b>C</b> CRT effect</li>
+      <li><b>M</b> sound</li>
+      <li><b>H</b> close this</li>
+    </ul>
+  </div>
+  <noscript><p>NecroText needs JavaScript to draw its pages.</p></noscript>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

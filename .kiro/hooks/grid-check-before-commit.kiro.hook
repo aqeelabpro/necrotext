@@ -1,0 +1,13 @@
+{
+  "enabled": true,
+  "name": "Pre-commit style grid and lint check",
+  "description": "Manual trigger to run before committing: lints (syntax and no em dashes) then renders every page and checks the 40x24 rules.",
+  "version": "1",
+  "when": {
+    "type": "userTriggered"
+  },
+  "then": {
+    "type": "runCommand",
+    "command": "npm run lint && npm run check-grid"
+  }
+}

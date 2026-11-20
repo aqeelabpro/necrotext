@@ -1,0 +1,19 @@
+{
+  "name": "necrotext",
+  "version": "1.0.0",
+  "description": "NecroText: a Teletext (Ceefax/Oracle) revival for the web. Zero dependencies.",
+  "type": "module",
+  "license": "MIT",
+  "private": true,
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "build": "node scripts/build.js",
+    "test": "node --test \"tests/**/*.test.js\"",
+    "start": "node scripts/build.js && node scripts/serve.js",
+    "serve": "node scripts/serve.js",
+    "fetch-data": "node scripts/fetch-data.js",
+    "lint": "node scripts/lint.js",
+    "check-grid": "node scripts/check-grid.js",
+    "snapshot": "node scripts/snapshot.js"
+  }
+}

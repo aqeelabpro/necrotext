@@ -1,0 +1,14 @@
+{
+  "enabled": true,
+  "name": "Rebuild and check pages when data changes",
+  "description": "When a data snapshot changes, rebuild dist/ and render every page against it to confirm all pages still fit the 40x24 grid.",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": ["data/*.json"]
+  },
+  "then": {
+    "type": "runCommand",
+    "command": "npm run build && npm run check-grid"
+  }
+}
