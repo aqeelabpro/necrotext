@@ -1,0 +1,14 @@
+{
+  "enabled": true,
+  "name": "Run tests when source changes",
+  "description": "Runs the full test suite whenever a file under src/ or tests/ is saved, so grid invariant failures show up immediately.",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": ["src/**/*.js", "tests/**/*.js"]
+  },
+  "then": {
+    "type": "runCommand",
+    "command": "npm test"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "enabled": true,
+  "name": "New page checklist",
+  "description": "When a page generator is saved, ask the agent to check it against the teletext steering rules.",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": ["src/pages/*.js"]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "A page generator changed. Check it against .kiro/steering/teletext-constraints.md: content fits rows 1 to 21, double height rows are followed by a blank row, fastext targets are registered pages, text goes through clean(), and there are no em dashes. Fix any violation and add a test if a new rule is needed."
+  }
+}
