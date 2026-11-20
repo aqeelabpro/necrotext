@@ -54,3 +54,105 @@ test('normaliseWeather picks the current hour onward', () => {
   assert.equal(w.daily[1].precip, 2.5);
   assert.equal(w.hourly[0], 9);
 });
+
+import { seedFromLive } from '../scripts/seed-from-live.js';
+import { renderPage } from '../src/pages/registry.js';
+
+const T0 = new Date('2026-10-20T10:00:00Z');
+const tmp = () => fs.mkdtempSync(path.join(os.tmpdir(), 'nt-'));
+const run = (fetchImpl, dir, now = T0) => fetchAll({ fetchImpl, dir, now, retryDelayMs: 0 });
+
+test('a request that fails once is retried and succeeds', async () => {
+  const dir = tmp();
+  const calls = {};
+  const base = fakeFetch();
+  const flaky = async (url, o) => {
+    calls[url] = (calls[url] || 0) + 1;
+    if (String(url).includes('bbci.co.uk/news/rss') && calls[url] === 1) throw new Error('reset');
+    return base(url, o);
+  };
+  const status = await run(flaky, dir);
+  assert.equal(status.sources.news.ok, true);
+  assert.equal(calls['https://feeds.bbci.co.uk/news/rss.xml'], 2);
+});
+
+test('an invalid payload does not overwrite a good file and is reported failed', async () => {
+  const dir = tmp();
+  await run(fakeFetch(), dir);
+  const before = fs.readFileSync(path.join(dir, 'weather.json'), 'utf8');
+  const bad = async (url, o) => {
+    if (String(url).includes('open-meteo')) return { ok: true, json: async () => ({ ...METEO, current: { ...METEO.current, temperature_2m: 'warm' } }) };
+    return fakeFetch()(url, o);
+  };
+  const status = await run(bad, dir, new Date('2026-10-20T12:00:00Z'));
+  assert.equal(status.sources.weather.ok, false);
+  assert.match(status.sources.weather.error, /invalid weather/);
+  assert.equal(fs.readFileSync(path.join(dir, 'weather.json'), 'utf8'), before);
+});
+
+test('a feed with no titled item is rejected', async () => {
+  const dir = tmp();
+  const empty = async (url, o) => String(url).includes('bbci.co.uk/sport') ? { ok: true, text: async () => '<rss><channel><item><description>x</description></item></channel></rss>' } : fakeFetch()(url, o);
+  const status = await run(empty, dir);
+  assert.equal(status.sources.sport.ok, false);
+  assert.equal(fs.existsSync(path.join(dir, 'sport.json')), false);
+});
+
+test('success clears the fallback flag', async () => {
+  const dir = tmp();
+  fs.writeFileSync(path.join(dir, 'status.json'), JSON.stringify({ sources: { news: { ok: true, fallback: true } } }));
+  const status = await run(fakeFetch(), dir);
+  assert.equal(status.sources.news.fallback, undefined);
+  assert.equal(JSON.parse(fs.readFileSync(path.join(dir, 'status.json'), 'utf8')).sources.news.fallback, undefined);
+});
+
+test('seedFromLive copies valid live files and skips invalid or failed ones', async () => {
+  const live = tmp();
+  await run(fakeFetch(), live);
+  const dir = tmp();
+  fs.writeFileSync(path.join(dir, 'status.json'), JSON.stringify({ sources: { news: { ok: true, fallback: true }, tech: { ok: true, fallback: true }, sport: { ok: true, fallback: true } } }));
+  for (const k of ['news', 'tech', 'sport', 'hn', 'weather']) fs.writeFileSync(path.join(dir, k + '.json'), '{"sample":true}');
+  const serve = async (url) => {
+    const name = String(url).split('/').pop();
+    if (name === 'tech.json') return { ok: false, status: 404 };
+    if (name === 'sport.json') return { ok: true, json: async () => ({ items: [] }) };
+    return { ok: true, json: async () => JSON.parse(fs.readFileSync(path.join(live, name), 'utf8')) };
+  };
+  const r = await seedFromLive({ fetchImpl: serve, dir, base: 'https://x.test/data' });
+  assert.deepEqual(r.seeded, ['news', 'hn', 'weather']);
+  assert.deepEqual(r.skipped, ['tech', 'sport']);
+  assert.equal(JSON.parse(fs.readFileSync(path.join(dir, 'news.json'), 'utf8')).items.length, 3);
+  assert.equal(fs.readFileSync(path.join(dir, 'tech.json'), 'utf8'), '{"sample":true}');
+  const st = JSON.parse(fs.readFileSync(path.join(dir, 'status.json'), 'utf8'));
+  assert.equal(st.sources.news.fallback, undefined);
+  assert.equal(st.sources.tech.fallback, true);
+});
+
+test('seedFromLive skips sources whose live status entry is not ok', async () => {
+  const dir = tmp();
+  fs.writeFileSync(path.join(dir, 'news.json'), '{"sample":true}');
+  const serve = async (url) => {
+    const name = String(url).split('/').pop();
+    if (name === 'status.json') return { ok: true, json: async () => ({ sources: { news: 'bogus', tech: { ok: false } } }) };
+    return { ok: true, json: async () => ({ items: [{ title: 'x' }] }) };
+  };
+  const r = await seedFromLive({ fetchImpl: serve, dir, base: 'https://x.test/data/' });
+  assert.equal(r.seeded.length, 0);
+  assert.equal(fs.readFileSync(path.join(dir, 'news.json'), 'utf8'), '{"sample":true}');
+});
+
+test('seedFromLive leaves everything alone when the site is unreachable', async () => {
+  const dir = tmp();
+  fs.writeFileSync(path.join(dir, 'news.json'), '{"sample":true}');
+  const r = await seedFromLive({ fetchImpl: async () => { throw new Error('offline'); }, dir, base: 'https://x.test/data/' });
+  assert.equal(r.seeded.length, 0);
+  assert.equal(fs.readFileSync(path.join(dir, 'news.json'), 'utf8'), '{"sample":true}');
+});
+
+test('page 100 labels sample data only when every source is fallback', () => {
+  const src = (fb) => ({ ok: true, fallback: fb });
+  const mk = (fb) => ({ status: { sources: { news: src(true), tech: src(true), sport: src(true), hn: src(true), weather: src(fb) } } });
+  const text = (data) => Object.values(renderPage('100', 1, { data, now: T0, seed: 1 }).grid.cells).map((c) => String.fromCharCode(c)).join('');
+  assert.match(text(mk(true)), /SAMPLE DATA/);
+  assert.doesNotMatch(text(mk(false)), /SAMPLE DATA/);
+});

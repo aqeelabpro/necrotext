@@ -1,0 +1,10 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "necrotext-teletext",
+  "version": "1.0.0",
+  "description": "Render, check and design 40x24 teletext pages with the NecroText MCP server and two skills.",
+  "author": { "name": "aqeelabpro" },
+  "license": "MIT",
+  "repository": "https://github.com/aqeelabpro/necrotext",
+  "keywords": ["teletext", "ceefax", "necrotext", "page", "mosaic", "40x24"]
+}

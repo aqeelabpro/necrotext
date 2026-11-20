@@ -3,6 +3,7 @@ on:
   push:
     branches: [main]
   schedule:
+    # GitHub disables scheduled workflows after 60 days without repo activity.
     - cron: "*/30 * * * *"
   workflow_dispatch:
 permissions:
@@ -11,7 +12,7 @@ permissions:
   id-token: write
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -25,6 +26,14 @@ jobs:
           node-version: 22
       - name: Test on the bundled sample data (blocking)
         run: npm test
+      - uses: actions/configure-pages@v5
+        id: pages
+        continue-on-error: true
+      - name: Seed data from the last deployed site (failures keep the sample)
+        run: npm run seed-data
+        continue-on-error: true
+        env:
+          SEED_BASE_URL: ${{ steps.pages.outputs.base_url && format('{0}/data/', steps.pages.outputs.base_url) || '' }}
       - name: Fetch live data (failures are reported on page 666, not fatal)
         run: npm run fetch-data
         continue-on-error: true
@@ -32,7 +41,6 @@ jobs:
         run: npm test
         continue-on-error: true
       - run: npm run build
-      - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

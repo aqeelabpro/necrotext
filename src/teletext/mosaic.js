@@ -16,21 +16,23 @@ const MCOL = (n) => String.fromCharCode(0x10 + n);
 /**
  * Turn a pixel bitmap into rows of cells. Each cell covers 2x3 pixels.
  * Pixel characters: '.' empty, R G Y B M C W colours. A cell takes the first colour found in it.
- * Rows begin in alpha mode, so a mosaic colour code is emitted before the first lit cell
- * and whenever the colour changes.
+ * Rows begin in alpha mode. A mosaic colour code occupies a cell of its own, so to keep the
+ * shape intact it is placed in the blank cell just before the cell that needs the new colour.
+ * Approximation: when two lit cells touch and differ in colour there is no blank cell to hold
+ * the code, so the second cell keeps the colour already in force. The only extra cell is the
+ * code before a row's first lit cell when that cell is at the left edge.
  */
 export function fromBitmap(lines) {
   const h = Math.ceil(lines.length / 3) * 3;
   const w = Math.ceil(Math.max(0, ...lines.map((l) => l.length)) / 2) * 2;
   const px = (x, y) => (lines[y] && lines[y][x]) || '.';
+  const pts = [[0, 0, TL], [1, 0, TR], [0, 1, ML], [1, 1, MR], [0, 2, BL], [1, 2, BR]];
   const out = [];
   for (let cy = 0; cy < h / 3; cy++) {
-    let row = '';
-    let cur = 0;
+    const cells = [];
     for (let cx = 0; cx < w / 2; cx++) {
       let bits = 0;
       let col = 0;
-      const pts = [[0, 0, TL], [1, 0, TR], [0, 1, ML], [1, 1, MR], [0, 2, BL], [1, 2, BR]];
       for (const [dx, dy, b] of pts) {
         const ch = px(cx * 2 + dx, cy * 3 + dy);
         if (ch !== '.' && ch !== ' ') {
@@ -38,16 +40,25 @@ export function fromBitmap(lines) {
           if (!col) col = LETTER_COLOUR[ch] || 7;
         }
       }
-      if (!bits) {
-        row += String.fromCharCode(0x20);
-        continue;
-      }
-      if (col !== cur) {
-        row += MCOL(col);
-        cur = col;
-      }
-      row += String.fromCharCode(sixel(bits));
+      cells.push({ bits, col });
     }
+    let row = '';
+    let cur = 0;
+    cells.forEach((c, i) => {
+      if (!c.bits) {
+        const next = cells[i + 1];
+        if (next && next.bits && next.col !== cur) {
+          row += MCOL(next.col);
+          cur = next.col;
+        } else row += ' ';
+        return;
+      }
+      if (!cur) {
+        row += MCOL(c.col);
+        cur = c.col;
+      }
+      row += String.fromCharCode(sixel(c.bits));
+    });
     out.push(row);
   }
   return out;

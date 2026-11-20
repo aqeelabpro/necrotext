@@ -24,7 +24,7 @@ const shift = (layer, dx, dy) =>
 const overlay = (base, top) => base.map((row, y) => [...row].map((c, x) => (top[y][x] !== '.' ? top[y][x] : c)).join(''));
 const withRows = (layer, rows) => layer.map((r, y) => (rows[y] !== undefined ? rows[y] : r));
 
-const ICONS = {
+export const ICONS = {
   clear: SUN,
   partly: overlay(SMALL_SUN, shift(CLOUD, 1, 2)),
   cloud: CLOUD,

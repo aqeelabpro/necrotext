@@ -1,0 +1,14 @@
+{
+  "enabled": true,
+  "name": "Check pages through the MCP server",
+  "description": "When a page generator or the shared grid code changes, ask the agent to run the necrotext check_page tool and render the changed pages.",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": ["src/pages/*.js", "src/teletext/*.js"]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Call the necrotext MCP tool check_page with no arguments. If it fails, fix the cause. Then call render_page for the page numbers affected by the edit and confirm they read well in 40 columns."
+  }
+}
