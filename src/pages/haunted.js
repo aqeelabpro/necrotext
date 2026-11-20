@@ -4,20 +4,22 @@ import { banner } from '../teletext/layout.js';
 import { fromBitmap, box } from '../teletext/mosaic.js';
 import { itemsOf, sourceState, ageMs, ageText, SOURCES } from '../data/store.js';
 import { mulberry32, hashString, pick, int } from '../rng.js';
-import { whisper, words } from '../ghost.js';
+import { whisper } from '../ghost.js';
 import { para } from './util.js';
 
 const NAMES = { news: 'News', tech: 'Tech', sport: 'Sport', hn: 'HackerNews', weather: 'Weather' };
 const STATE_COL = { alive: K.GREEN, stale: K.YELLOW, dead: K.RED };
 const STATE_TXT = { alive: 'ALIVE', stale: 'STALE', dead: 'DEAD' };
 
-const TOMB = [
-  '....WWWWWW....', '..WWWWWWWWWW..', '.WWWWWWWWWWWW.', '.WWWWRWWRWWWW.', '.WWWWWRRWWWWW.', '.WWWWRWWRWWWW.', '.WWWWWWWWWWWW.',
-  '.WWWWWWWWWWWW.', '.WWWWWWWWWWWW.',
+// Art is 14x9 pixels, 7 cells by 3 rows. Colours are cell aligned (a cell takes the colour of its
+// first lit pixel), so the red cross and the blue eyes fill whole cells.
+export const TOMB = [
+  '....WWRRWW....', '..WWWWRRWWWW..', '.WWWWWRRWWWWW.', '.WWWRRRRRRWWW.', '.WWWRRRRRRWWW.', '.WWWRRRRRRWWW.',
+  '.WWWWWRRWWWWW.', '.WWWWWRRWWWWW.', '.WWWWWRRWWWWW.',
 ];
-const GHOST = [
-  '....WWWWWW....', '..WWWWWWWWWW..', '.WWWWWWWWWWWW.', '.WWBBWWWWBBWW.', '.WWBBWWWWBBWW.', '.WWWWWWWWWWWW.', '.WWWWWBBWWWWW.',
-  '.WWWWWWWWWWWW.', '.WW.WWW.WWW.W.',
+export const GHOST = [
+  '....WWWWWW....', '..WWWWWWWWWW..', '.WWWWWWWWWWWW.', '.WWWBBWWBBWWW.', '.WWWBBWWBBWWW.', '.WWWBBWWBBWWW.',
+  '.WWWWWWWWWWWW.', '.WWWWWWWWWWWW.', '.WW.WWWWWW.WW.',
 ];
 
 /** Page 666: real diagnostics from data/status.json. */
@@ -70,16 +72,16 @@ function oracle(ctx) {
   const day = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
   const rng = mulberry32(hashString('oracle' + day) ^ (ctx.seed >>> 0));
   const heads = ['news', 'tech', 'sport', 'hn'].flatMap((k) => itemsOf(ctx.data, k).map((i) => clean(i.title)));
-  const pool = [...new Set(heads.flatMap((h) => words(h)))];
-  const w = (n) => (pool.length ? pick(rng, pool) : ['MOON', 'CABLE', 'SIGNAL'][n % 3]);
-  const [a, b, c] = [w(0), w(1), w(2)];
+  const usable = heads.filter((h) => h.length >= 8);
   const lucky = pick(rng, ['101', '400', '600', '701', '710', '800', '888']);
-  const fortunes = [
-    `The ${a} will rise before the ${b} falls.`,
-    `Beware ${a}. It speaks softly of ${b}.`,
-    `When ${a} meets ${b}, ${c} will be the first to know.`,
-    `A stranger carrying ${a} brings news of ${b}.`,
-  ];
+  const quote = usable.length ? '"' + truncate(pick(rng, usable), 56) + '"' : '';
+  const fortunes = quote
+    ? [
+        `The spirits have read today's news. They say: ${quote}. They are not reassured.`,
+        `A voice on the cable reads out ${quote}. Nobody in the house has the heart to tell it.`,
+        `The oracle has seen ${quote}. It has seen worse, and it remembers all of it.`,
+      ]
+    : ['The spirits found no news on file today. They find that more worrying than any headline.'];
   const text = fortunes[int(rng, fortunes.length)];
   const rows = [
     ...dbl('THE ORACLE', 'MAGENTA'),
@@ -124,7 +126,7 @@ const unlucky = () => ({
   subpages: [[
     ...dbl('UNLUCKY', 'RED'), K.FLASH + K.RED + 'THIRTEEN', '',
     ...para('Nobody ever finds page 13. Engineers say it was skipped on purpose, and the pages around it hold their breath.', 38, 'WHITE'), '',
-    K.GREEN + 'Press X', K.CONCEAL + K.YELLOW + 'IT HAS ALWAYS BEEN HERE. KEEP WATCHING.',
+    K.GREEN + 'Press X', K.YELLOW + K.CONCEAL + 'IT HAS ALWAYS BEEN HERE. KEEP WATCHING.',
   ]],
 });
 

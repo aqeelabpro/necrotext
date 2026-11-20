@@ -4,7 +4,7 @@ import { renderPage, pageIds, hasPage, stepPage, REGISTRY } from '../src/pages/r
 import { COLS, ROWS, isAllowedCode } from '../src/teletext/constants.js';
 import { forAll, genData, genDate } from './helpers/prop.js';
 import { loadDataSync } from '../src/data/node-load.js';
-import { toText } from '../src/teletext/render.js';
+import { toText, resolve } from '../src/teletext/render.js';
 import { int } from '../src/rng.js';
 
 const EM = '\u2014';
@@ -129,4 +129,49 @@ test('page 667 is deterministic for a given day and data', () => {
   const a = toText(renderPage('667', 1, ctx).grid).slice(1).join('\n');
   const b = toText(renderPage('667', 1, { ...ctx, now: new Date(2026, 9, 31, 22) }).grid).slice(1).join('\n');
   assert.equal(a, b);
+});
+
+test('quiz answers and the hidden page 13 line are concealed until revealed', () => {
+  const ctx = { data: loadDataSync(), now: new Date(2026, 9, 31, 12), seed: 1 };
+  for (let s = 1; s <= 8; s++) {
+    const cells = resolve(renderPage('701', s, ctx).grid);
+    const text = cells.flat().filter((c) => c.conceal).map((c) => c.ch).join('');
+    assert.match(text, /ANSWER: [A-D] - /, `quiz ${s}`);
+    const shown = cells.flat().filter((c) => !c.conceal).map((c) => c.ch).join('');
+    assert.ok(!/ANSWER/.test(shown), `quiz ${s} leaks its answer`);
+  }
+  const hidden = resolve(renderPage('013', 1, ctx).grid).flat().filter((c) => c.conceal).map((c) => c.ch).join('');
+  assert.match(hidden, /IT HAS ALWAYS BEEN HERE/);
+});
+
+test('property: any row with a conceal code has concealed visible text', () => {
+  forAll(genCtx, (ctx) => {
+    for (const r of allPages(ctx)) {
+      const cells = resolve(r.grid);
+      for (let row = 0; row < ROWS; row++) {
+        if (!r.grid.row(row).includes('\x18')) continue;
+        assert.ok(cells[row].some((c) => c.conceal && c.ch !== ' ' && !c.ctrl), `page ${r.id}/${r.sub} row ${row}`);
+      }
+    }
+  }, { runs: 20 });
+});
+
+test('property: every fastext label is uppercase and at most 9 characters', () => {
+  forAll(genCtx, (ctx) => {
+    for (const r of allPages(ctx)) {
+      for (const [, label] of r.fastext) {
+        assert.ok(label.length <= 9 && label === label.toUpperCase(), `page ${r.id}: ${label}`);
+      }
+    }
+  }, { runs: 20 });
+});
+
+test('page 667 quotes a real headline in plain English', () => {
+  const data = loadDataSync();
+  const ctx = { data, now: new Date(2026, 9, 31, 12), seed: 1 };
+  const text = toText(renderPage('667', 1, ctx).grid).join(' ');
+  assert.match(text, /"/);
+  assert.ok(!/RURAL|FINAL BRINGS/.test(text));
+  const empty = toText(renderPage('667', 1, { data: {}, now: new Date(0), seed: 1 }).grid).join(' ');
+  assert.match(empty, /NO NEWS/);
 });

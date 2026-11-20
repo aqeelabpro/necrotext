@@ -42,3 +42,14 @@ test('box rows share one width', () => {
   assert.equal(b.length, 4);
   for (const r of b) assert.equal(r.length, 15);
 });
+
+test('fromBitmap keeps the shape when the colour changes inside a row', () => {
+  const rows = fromBitmap(['YYWW', 'YYWW', 'YYWW']);
+  assert.equal(rows.length, 1);
+  // yellow code, yellow block, white block: adjacent lit cells keep the colour in force
+  assert.equal(rows[0].length, 3);
+  const spaced = fromBitmap(['YY..WW', 'YY..WW', 'YY..WW'])[0];
+  assert.equal(spaced.length, 4, 'one code before the first cell, then the blank cell holds the next code');
+  assert.equal(spaced.charCodeAt(0), 0x13);
+  assert.equal(spaced.charCodeAt(2), 0x17);
+});

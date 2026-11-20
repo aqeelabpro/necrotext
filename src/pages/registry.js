@@ -35,7 +35,7 @@ function sanitizeLine(line) {
   let out = '';
   for (const ch of String(line ?? '').slice(0, COLS)) {
     const c = ch.charCodeAt(0);
-    if (c >= 0x20 && c < 0x7f) out += ch;
+    if (c >= 0x20 && c <= 0x7f) out += ch;
     else if (DEFINED_CONTROL.has(c)) out += ch;
     else out += c > 0x7f ? '?' : ' ';
   }

@@ -24,3 +24,15 @@ test('letters are all distinct', () => {
     assert.equal(seen.size, set.length, set);
   }
 });
+
+test('comma and full stop differ, and U and V differ', () => {
+  assert.notDeepEqual(glyph(','), glyph('.'));
+  assert.notDeepEqual(glyph('U'), glyph('V'));
+});
+
+test('i and j sit on the baseline of x-height letters, apart from the j descender', () => {
+  const last = (ch) => glyph(ch).reduce((a, r, y) => (r ? y : a), -1);
+  assert.equal(last('i'), last('n'));
+  assert.equal(last('l'), last('n'));
+  assert.ok(last('j') > last('n'));
+});
