@@ -5,5 +5,12 @@
   "feature_order": [
     "FEAT-001"
   ],
-  "blocked_reason": null
+  "blocked_reason": null,
+  "verification": {
+    "build": "pass",
+    "tests": "pass",
+    "test_quality": "pass",
+    "docker_build": "skipped",
+    "summary": "build, 59 tests, lint pass; v2 review APPROVED; UI not viewed in a browser"
+  }
 }
