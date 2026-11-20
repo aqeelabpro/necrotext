@@ -11,24 +11,15 @@ resources:
   - file://.kiro/specs/necrotext-core/design.md
 permissions:
   rules:
-    - tool: shell
-      pattern: "npm test"
-      action: allow
-    - tool: shell
-      pattern: "npm run lint"
-      action: allow
-    - tool: shell
-      pattern: "npm run check-grid"
-      action: allow
-    - tool: shell
-      pattern: "npm run build"
-      action: allow
-    - tool: fs_write
-      pattern: "src/pages/**"
-      action: allow
-    - tool: fs_write
-      pattern: "tests/**"
-      action: allow
+    - capability: shell
+      match: ["npm test", "npm run lint", "npm run check-grid", "npm run build"]
+      effect: allow
+    - capability: fs_write
+      match: ["src/pages/**", "tests/**"]
+      effect: allow
+    - capability: mcp
+      match: ["necrotext/*"]
+      effect: allow
 welcomeMessage: "Page designer on air. Tell me which page number and what it should say."
 ---
 

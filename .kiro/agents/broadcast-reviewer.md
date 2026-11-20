@@ -10,9 +10,12 @@ resources:
   - file://.kiro/steering/*.md
 permissions:
   rules:
-    - tool: fs_write
-      pattern: "**"
-      action: deny
+    - capability: fs_write
+      match: ["**"]
+      effect: deny
+    - capability: mcp
+      match: ["necrotext/*"]
+      effect: allow
 welcomeMessage: "Duty reviewer here. Point me at a diff and I will check it before it goes to air."
 ---
 
