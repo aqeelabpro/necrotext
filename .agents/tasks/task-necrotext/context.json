@@ -1,0 +1,16 @@
+{
+  "project_type": "Greenfield static web app (NecroText, a Teletext revival) with zero runtime dependencies, deployed to GitHub Pages",
+  "language": "JavaScript (ES modules, JSDoc types), Node 22 for tooling",
+  "build_system": "No bundler. npm registry is blocked (403) in the sandbox, so NO npm dependencies may be installed. Use only Node built-ins: node:test, node:assert, node:fs, global fetch. package.json has scripts only, type=module.",
+  "test_framework": "node --test (node:test) in tests/. Property-based tests are hand-rolled with a seeded PRNG (tests/helpers/prop.js) because fast-check cannot be installed; document that fast-check is a drop-in upgrade.",
+  "build_command": "npm run build (node scripts/build.js: assembles dist/ from public/ plus data/*.json, runs page generation to a prebuilt pages.json)",
+  "test_command": "npm test (node --test tests/)",
+  "verification_instructions": "npm run build && npm test; then node scripts/serve.js (tiny static server) and curl / to confirm 200",
+  "snapshot_or_generated_files": "data/*.json are cached feed snapshots committed to the repo and refreshed by scripts/fetch-data.js (also run by a scheduled GitHub Action). dist/ is gitignored.",
+  "setup_instructions": "None needed beyond Node >=20. No npm install.",
+  "environment_constraints": "Sandbox blocks external hosts (feeds.bbci.co.uk, open-meteo, npm registry return 403). Cannot fetch live data or install packages. scripts/fetch-data.js must degrade gracefully and the committed data/ fallback snapshots must be hand-authored realistic samples. No docker. Sub-agents cannot push; commit on a branch.",
+  "contribution_requirements": "Hackathon rules: public repo, MIT LICENSE at root, /.kiro committed and NOT in .gitignore with specs, steering, hooks; README run instructions; docs/HOW_KIRO_WAS_USED.md.",
+  "key_patterns": "Pure functions render pages to a 40x24 grid of cells; renderer is separate from the DOM so it is testable in Node. Teletext control codes: colours, mosaic, double height, hold, etc. serial-attribute model like real teletext (a control code occupies a cell and displays as space).",
+  "relevant_files": [],
+  "directory_structure": "public/ (index.html, css, js app), src/ (teletext core: grid, codes, mosaic, text-wrap, layout; pages/ generators; ghost), data/ (cached feeds), scripts/, tests/, docs/, .kiro/{specs,steering,hooks}, .github/workflows/"
+}
