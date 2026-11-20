@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { initialState, press, parseHash, toHash } from '../src/ui/nav.js';
-import { drawScreen, SCREEN_W } from '../src/ui/draw.js';
+import { drawScreen, SCREEN_W, SCREEN_H } from '../src/ui/draw.js';
 import { renderPage, stepPage } from '../src/pages/registry.js';
 import { resolve } from '../src/teletext/render.js';
 import { loadDataSync } from '../src/data/node-load.js';
@@ -62,15 +62,21 @@ test('hash routing round trips', () => {
 });
 
 test('drawScreen paints every page without throwing (recording fake canvas)', () => {
-  const calls = { fillRect: 0, fillText: 0 };
+  const calls = { fillRect: 0, fillText: 0, outside: 0 };
   const ctx = new Proxy({}, {
-    get: (t, p) => (p === 'fillRect' ? () => calls.fillRect++ : p === 'fillText' ? () => calls.fillText++ : () => {}),
+    get: (t, p) => (p === 'fillRect' ? (x, y, w, h) => {
+      calls.fillRect++;
+      if (x < 0 || y < 0 || x + w > SCREEN_W + 1e-6 || y + h > SCREEN_H + 1e-6) calls.outside++;
+    } : p === 'fillText' ? () => calls.fillText++ : () => {}),
     set: () => true,
   });
   const data = loadDataSync();
   for (const id of pageIds()) {
     drawScreen(ctx, resolve(renderPage(id, 1, { data, now: new Date(0) }).grid), { flashOn: id.length > 5, reveal: true });
   }
-  assert.ok(calls.fillRect > 100 && calls.fillText > 100);
-  assert.equal(SCREEN_W, 800);
+  assert.ok(calls.fillRect > 100);
+  assert.equal(calls.fillText, 0, 'text is drawn with the pixel font, not fillText');
+  assert.equal(calls.outside, 0, 'every rect lies inside the canvas');
+  assert.equal(SCREEN_W, 880);
+  assert.equal(SCREEN_H, 660);
 });
