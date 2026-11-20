@@ -1,0 +1,46 @@
+{
+  "generatedAt": "2026-10-20T09:00:00Z",
+  "note": "Bundled hand-authored sample data. Replaced by scripts/fetch-data.js when run with network access.",
+  "sources": {
+    "news": {
+      "ok": true,
+      "fallback": true,
+      "fetchedAt": "2026-10-20T09:00:00Z",
+      "items": 10,
+      "dropped": 0,
+      "url": "https://feeds.bbci.co.uk/news/rss.xml"
+    },
+    "tech": {
+      "ok": true,
+      "fallback": true,
+      "fetchedAt": "2026-10-20T09:00:00Z",
+      "items": 10,
+      "dropped": 0,
+      "url": "https://feeds.bbci.co.uk/news/technology/rss.xml"
+    },
+    "sport": {
+      "ok": true,
+      "fallback": true,
+      "fetchedAt": "2026-10-20T09:00:00Z",
+      "items": 10,
+      "dropped": 0,
+      "url": "https://feeds.bbci.co.uk/sport/rss.xml"
+    },
+    "hn": {
+      "ok": true,
+      "fallback": true,
+      "fetchedAt": "2026-10-20T09:00:00Z",
+      "items": 10,
+      "dropped": 0,
+      "url": "https://hacker-news.firebaseio.com/v0/topstories.json"
+    },
+    "weather": {
+      "ok": true,
+      "fallback": true,
+      "fetchedAt": "2026-10-20T09:00:00Z",
+      "items": 5,
+      "dropped": 0,
+      "url": "https://api.open-meteo.com/v1/forecast"
+    }
+  }
+}

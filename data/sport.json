@@ -1,0 +1,66 @@
+{
+  "fetchedAt": "2026-10-20T09:00:00Z",
+  "source": "https://feeds.bbci.co.uk/sport/rss.xml",
+  "items": [
+    {
+      "title": "Late goal rescues a draw in the derby",
+      "description": "A stoppage time header levelled a tense local derby. The home manager praised the side for refusing to give up after going behind early.",
+      "link": "https://sport.example/sample/1",
+      "pubDate": "Tue, 20 Oct 2026 00:10:00 GMT"
+    },
+    {
+      "title": "British sprinter breaks national indoor record",
+      "description": "A personal best of 6.52 seconds in the 60m final set a new national mark. The athlete said the time came as a surprise after a minor injury scare.",
+      "link": "https://sport.example/sample/2",
+      "pubDate": "Tue, 20 Oct 2026 01:14:00 GMT"
+    },
+    {
+      "title": "Cricket: openers put hosts in command on day two",
+      "description": "A century stand set up a commanding first innings total. The visitors face a difficult final session under cloud.",
+      "link": "https://sport.example/sample/3",
+      "pubDate": "Tue, 20 Oct 2026 02:18:00 GMT"
+    },
+    {
+      "title": "Rugby union: injury worries ahead of autumn series",
+      "description": "Two first choice forwards are doubtful for the opening international. The head coach said a squad update would follow on Thursday.",
+      "link": "https://sport.example/sample/4",
+      "pubDate": "Tue, 20 Oct 2026 03:22:00 GMT"
+    },
+    {
+      "title": "Tennis: qualifier stuns seed in straight sets",
+      "description": "The world number 240 won 6-3 6-4 to reach the quarter finals of the indoor event. She will face the home favourite next.",
+      "link": "https://sport.example/sample/5",
+      "pubDate": "Tue, 20 Oct 2026 04:26:00 GMT"
+    },
+    {
+      "title": "Cyclist wins mountain stage after solo breakaway",
+      "description": "Attacking 40km from the finish, the rider held off the chasing group by 50 seconds. The overall leader retained the jersey.",
+      "link": "https://sport.example/sample/6",
+      "pubDate": "Tue, 20 Oct 2026 05:30:00 GMT"
+    },
+    {
+      "title": "Netball side secure place in the final",
+      "description": "A strong third quarter turned the semi final and sent the team through. The coach credited defensive work in the circle.",
+      "link": "https://sport.example/sample/7",
+      "pubDate": "Tue, 20 Oct 2026 06:34:00 GMT"
+    },
+    {
+      "title": "Golf: late birdie run gives leader two shot cushion",
+      "description": "Three birdies in the last four holes moved the overnight leader clear. Weather permitting, the final round starts at nine.",
+      "link": "https://sport.example/sample/8",
+      "pubDate": "Tue, 20 Oct 2026 07:38:00 GMT"
+    },
+    {
+      "title": "Swimming: relay team qualify for world finals",
+      "description": "The mixed relay lowered the national record in the heats. Coaches said the team still has time left in the tank.",
+      "link": "https://sport.example/sample/9",
+      "pubDate": "Tue, 20 Oct 2026 08:42:00 GMT"
+    },
+    {
+      "title": "Football: club announces new stadium plans",
+      "description": "Plans for a 30,000 seat ground were presented to supporters. Construction would begin subject to planning approval.",
+      "link": "https://sport.example/sample/10",
+      "pubDate": "Tue, 20 Oct 2026 00:46:00 GMT"
+    }
+  ]
+}

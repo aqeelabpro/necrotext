@@ -1,0 +1,86 @@
+{
+  "fetchedAt": "2026-10-20T09:00:00Z",
+  "source": "https://hacker-news.firebaseio.com/v0/topstories.json",
+  "items": [
+    {
+      "title": "Show HN: A browser teletext renderer in 300 lines",
+      "url": "https://teletext.example/show",
+      "score": 412,
+      "by": "pixelnerd",
+      "descendants": 88,
+      "time": 1760950000
+    },
+    {
+      "title": "The case for boring technology, revisited",
+      "url": "https://boring.example/post",
+      "score": 356,
+      "by": "maintainer",
+      "descendants": 201,
+      "time": 1760950600
+    },
+    {
+      "title": "SQLite internals: how the pager works",
+      "url": "https://sqlite.example/pager",
+      "score": 298,
+      "by": "dbfan",
+      "descendants": 64,
+      "time": 1760951200
+    },
+    {
+      "title": "Why I still use a 2009 ThinkPad",
+      "url": "https://thinkpad.example/blog",
+      "score": 275,
+      "by": "oldschool",
+      "descendants": 143,
+      "time": 1760951800
+    },
+    {
+      "title": "A visual guide to Unicode normalization",
+      "url": "https://unicode.example/guide",
+      "score": 241,
+      "by": "glyphs",
+      "descendants": 37,
+      "time": 1760952400
+    },
+    {
+      "title": "Writing a tiny HTTP server in Rust",
+      "url": "https://rustlings.example/http",
+      "score": 227,
+      "by": "ferris",
+      "descendants": 52,
+      "time": 1760953000
+    },
+    {
+      "title": "Ask HN: What are you building this autumn?",
+      "url": "https://news.example/ask",
+      "score": 190,
+      "by": "curious",
+      "descendants": 310,
+      "time": 1760953600
+    },
+    {
+      "title": "Notes on property based testing at scale",
+      "url": "https://testing.example/pbt",
+      "score": 172,
+      "by": "shrinker",
+      "descendants": 45,
+      "time": 1760954200
+    },
+    {
+      "title": "Retro computing club revives a 1970s mainframe",
+      "url": "https://retro.example/mainframe",
+      "score": 158,
+      "by": "tapereel",
+      "descendants": 29,
+      "time": 1760954800
+    },
+    {
+      "title": "The quiet decline of the personal website",
+      "url": "https://web.example/personal",
+      "score": 144,
+      "by": "indieweb",
+      "descendants": 96,
+      "time": 1760955400
+    }
+  ]
+}

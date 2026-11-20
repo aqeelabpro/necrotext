@@ -1,0 +1,66 @@
+{
+  "fetchedAt": "2026-10-20T09:00:00Z",
+  "source": "https://feeds.bbci.co.uk/news/rss.xml",
+  "items": [
+    {
+      "title": "Rail fares frozen for a second year, ministers confirm",
+      "description": "Passengers will see no increase in regulated fares next March after a decision announced in Parliament. Operators said the freeze would be funded through savings on timetable changes. Campaign groups welcomed the news but called for simpler ticketing.",
+      "link": "https://news.example/sample/1",
+      "pubDate": "Tue, 20 Oct 2026 00:10:00 GMT"
+    },
+    {
+      "title": "Storm Eleanor brings travel disruption to western coasts",
+      "description": "Gusts of up to 70mph are expected overnight with flooding likely in low lying areas. Ferry services have been suspended and several rail routes are running reduced timetables. Residents are advised to check local alerts before travelling.",
+      "link": "https://news.example/sample/2",
+      "pubDate": "Tue, 20 Oct 2026 01:14:00 GMT"
+    },
+    {
+      "title": "Library visits rise for the third year running",
+      "description": "Public libraries recorded their busiest year since 2015, with children events and free computer access cited as the main draws. Councils say funding remains tight, and some branches still operate shortened hours.",
+      "link": "https://news.example/sample/3",
+      "pubDate": "Tue, 20 Oct 2026 02:18:00 GMT"
+    },
+    {
+      "title": "Scientists map hidden valleys beneath Antarctic ice",
+      "description": "A new radar survey has revealed a network of ancient river valleys buried under the ice sheet. Researchers say the data will help predict how quickly the ice moves towards the sea.",
+      "link": "https://news.example/sample/4",
+      "pubDate": "Tue, 20 Oct 2026 03:22:00 GMT"
+    },
+    {
+      "title": "Local bakery wins national bread award",
+      "description": "A family run bakery from Shropshire took the top prize for its slow fermented sourdough. The owners said the award came after a difficult year of rising ingredient costs.",
+      "link": "https://news.example/sample/5",
+      "pubDate": "Tue, 20 Oct 2026 04:26:00 GMT"
+    },
+    {
+      "title": "Heritage groups call for restoration of 1930s lido",
+      "description": "Campaigners have launched a petition to bring the disused lido back into use. A feasibility study suggests the pool could reopen within three years if funding is secured.",
+      "link": "https://news.example/sample/6",
+      "pubDate": "Tue, 20 Oct 2026 05:30:00 GMT"
+    },
+    {
+      "title": "Energy prices to fall slightly from January",
+      "description": "The regulator has announced a small fall in the price cap for the winter quarter. Analysts warned that bills would remain well above levels seen before 2021.",
+      "link": "https://news.example/sample/7",
+      "pubDate": "Tue, 20 Oct 2026 06:34:00 GMT"
+    },
+    {
+      "title": "Hospital trial uses robots to move supplies overnight",
+      "description": "Autonomous carts now deliver linen and medicines between wards at a London hospital. Staff said the pilot freed nurses for patient care and will be reviewed in the spring.",
+      "link": "https://news.example/sample/8",
+      "pubDate": "Tue, 20 Oct 2026 07:38:00 GMT"
+    },
+    {
+      "title": "Film festival opens with restored silent classic",
+      "description": "Organisers unveiled a newly restored print of a 1927 horror film, accompanied by a live orchestra. Tickets for the week long festival sold out within hours.",
+      "link": "https://news.example/sample/9",
+      "pubDate": "Tue, 20 Oct 2026 08:42:00 GMT"
+    },
+    {
+      "title": "Council to plant 10,000 trees along city cycle routes",
+      "description": "The planting scheme aims to cool streets in summer and absorb traffic noise. Volunteers will be recruited through local schools and community groups.",
+      "link": "https://news.example/sample/10",
+      "pubDate": "Tue, 20 Oct 2026 00:46:00 GMT"
+    }
+  ]
+}

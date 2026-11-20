@@ -1,0 +1,66 @@
+{
+  "fetchedAt": "2026-10-20T09:00:00Z",
+  "source": "https://feeds.bbci.co.uk/news/technology/rss.xml",
+  "items": [
+    {
+      "title": "Teletext fans rebuild Ceefax pages for modern screens",
+      "description": "Hobbyists have released open tools that render classic 40 by 24 teletext pages in a browser. The projects draw on archived broadcasts and original character sets.",
+      "link": "https://tech.example/sample/1",
+      "pubDate": "Tue, 20 Oct 2026 00:10:00 GMT"
+    },
+    {
+      "title": "Chipmaker unveils low power processor for wearables",
+      "description": "The new design promises two days of battery life in smart watches while adding on device speech recognition. Devices using the chip are due next spring.",
+      "link": "https://tech.example/sample/2",
+      "pubDate": "Tue, 20 Oct 2026 01:14:00 GMT"
+    },
+    {
+      "title": "Regulator opens inquiry into cloud storage contracts",
+      "description": "Officials are examining whether long exit fees and data transfer charges limit competition. Providers say their pricing reflects real infrastructure costs.",
+      "link": "https://tech.example/sample/3",
+      "pubDate": "Tue, 20 Oct 2026 02:18:00 GMT"
+    },
+    {
+      "title": "Open source maintainers get new security funding",
+      "description": "A consortium of companies has pledged money to audit widely used libraries. The first round will focus on tools for parsing and compression.",
+      "link": "https://tech.example/sample/4",
+      "pubDate": "Tue, 20 Oct 2026 03:22:00 GMT"
+    },
+    {
+      "title": "Researchers teach robots to fold laundry from video",
+      "description": "A lab demonstrated a robot arm learning towel folding by watching human demonstrations. The team says generalising to other fabrics remains a challenge.",
+      "link": "https://tech.example/sample/5",
+      "pubDate": "Tue, 20 Oct 2026 04:26:00 GMT"
+    },
+    {
+      "title": "Satellite broadband launches in rural trial areas",
+      "description": "Households in six remote regions have been given early access to a low orbit service. Early speeds average above 100Mbps with some evening slowdowns.",
+      "link": "https://tech.example/sample/6",
+      "pubDate": "Tue, 20 Oct 2026 05:30:00 GMT"
+    },
+    {
+      "title": "Browser makers agree shared standard for passkeys",
+      "description": "The change should let users move passkeys between devices without relying on a single vendor. Support is expected in stable releases by the end of the year.",
+      "link": "https://tech.example/sample/7",
+      "pubDate": "Tue, 20 Oct 2026 06:34:00 GMT"
+    },
+    {
+      "title": "Museum puts 3D scans of its collection online",
+      "description": "More than 5,000 objects can now be viewed and downloaded as models. Educators say the scans will help schools without access to the originals.",
+      "link": "https://tech.example/sample/8",
+      "pubDate": "Tue, 20 Oct 2026 07:38:00 GMT"
+    },
+    {
+      "title": "New battery recycling plant opens in the Midlands",
+      "description": "The facility can process enough cells for 20,000 electric vehicles a year. Operators say recovered metals will go straight back into manufacturing.",
+      "link": "https://tech.example/sample/9",
+      "pubDate": "Tue, 20 Oct 2026 08:42:00 GMT"
+    },
+    {
+      "title": "Old modems sold as collectors items surge in price",
+      "description": "Dial up hardware from the nineties is fetching surprising sums online. Sellers say buyers want the sounds as much as the equipment.",
+      "link": "https://tech.example/sample/10",
+      "pubDate": "Tue, 20 Oct 2026 00:46:00 GMT"
+    }
+  ]
+}
