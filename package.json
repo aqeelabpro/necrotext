@@ -15,6 +15,7 @@
     "seed-data": "node scripts/seed-from-live.js",
     "lint": "node scripts/lint.js",
     "check-grid": "node scripts/check-grid.js",
-    "snapshot": "node scripts/snapshot.js"
+    "snapshot": "node scripts/snapshot.js",
+    "mcp": "node scripts/mcp-server.js"
   }
 }
