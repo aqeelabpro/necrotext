@@ -12,6 +12,7 @@
     "start": "node scripts/build.js && node scripts/serve.js",
     "serve": "node scripts/serve.js",
     "fetch-data": "node scripts/fetch-data.js",
+    "seed-data": "node scripts/seed-from-live.js",
     "lint": "node scripts/lint.js",
     "check-grid": "node scripts/check-grid.js",
     "snapshot": "node scripts/snapshot.js"

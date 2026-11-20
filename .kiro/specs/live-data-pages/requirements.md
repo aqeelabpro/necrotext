@@ -10,3 +10,9 @@
 8. THE news pages SHALL show up to nine headlines per feed with story pages, word wrapped, with subpages for long text.
 9. THE weather pages SHALL show a mosaic icon, current temperature, a 24 hour sparkline and a seven day table.
 10. A GitHub Actions workflow SHALL refresh the data every 30 minutes, build and deploy to GitHub Pages.
+11. WHEN a request fails or returns a non-ok status, THE fetch script SHALL retry it once after a short delay.
+12. BEFORE writing a payload, THE fetch script SHALL validate it (a feed needs at least one item with a title, weather needs cities with a numeric temperature and a daily array) and SHALL keep the existing file and record `ok: false` when validation fails.
+13. WHEN a source is fetched successfully, THE script SHALL record its status entry without `fallback`.
+14. BEFORE fetching, THE workflow SHALL seed `data/` from the last deployed site, copying only files that download and validate, and a seeding failure SHALL NOT fail the job.
+15. WHEN every source is still flagged `fallback: true`, THE index page SHALL show a SAMPLE DATA note.
+16. THE workflow SHALL NOT cancel an in-progress Pages deployment and SHALL write the per-source fetch result to the run summary.

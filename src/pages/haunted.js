@@ -11,14 +11,14 @@ const NAMES = { news: 'News', tech: 'Tech', sport: 'Sport', hn: 'HackerNews', we
 const STATE_COL = { alive: K.GREEN, stale: K.YELLOW, dead: K.RED };
 const STATE_TXT = { alive: 'ALIVE', stale: 'STALE', dead: 'DEAD' };
 
-// Art is 14x9 pixels, 7 cells by 3 rows. Colours are cell aligned (a cell takes the colour of its
-// first lit pixel), so the red cross and the blue eyes fill whole cells.
+// Art is 14x9 pixels, 7 cells by 3 rows, one colour. fromBitmap keeps the colour in force across
+// touching lit cells, so inner details are unlit holes ('.') cut out of the stone.
 export const TOMB = [
-  '....WWRRWW....', '..WWWWRRWWWW..', '.WWWWWRRWWWWW.', '.WWWRRRRRRWWW.', '.WWWRRRRRRWWW.', '.WWWRRRRRRWWW.',
-  '.WWWWWRRWWWWW.', '.WWWWWRRWWWWW.', '.WWWWWRRWWWWW.',
+  '....WWWWWW....', '..WWWWWWWWWW..', '.WWWWW..WWWWW.', '.WWW......WWW.', '.WWW......WWW.', '.WWWWW..WWWWW.',
+  '.WWWWW..WWWWW.', '.WWWWW..WWWWW.', '.WWWWWWWWWWWW.',
 ];
 export const GHOST = [
-  '....WWWWWW....', '..WWWWWWWWWW..', '.WWWWWWWWWWWW.', '.WWWBBWWBBWWW.', '.WWWBBWWBBWWW.', '.WWWBBWWBBWWW.',
+  '....WWWWWW....', '..WWWWWWWWWW..', '.WWWWWWWWWWWW.', '.WWW..WW..WWW.', '.WWW..WW..WWW.', '.WWWWWWWWWWWW.',
   '.WWWWWWWWWWWW.', '.WWWWWWWWWWWW.', '.WW.WWWWWW.WW.',
 ];
 

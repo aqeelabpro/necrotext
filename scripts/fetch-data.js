@@ -7,6 +7,7 @@ import { parseRss } from '../src/data/rss.js';
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const TIMEOUT_MS = 10000;
+const RETRY_DELAY_MS = 1500;
 
 export const CITIES = [
   ['London', 51.5072, -0.1276], ['Manchester', 53.4808, -2.2426], ['Edinburgh', 55.9533, -3.1883],
@@ -34,12 +35,39 @@ async function fetchFeed(fetchImpl, url) {
   return { items: items.slice(0, 10), dropped };
 }
 
+/** Wrap a fetch so a throw or a non-ok response is tried once more after a short pause. */
+export function withRetry(fetchImpl, delayMs = RETRY_DELAY_MS) {
+  return async (url, opts) => {
+    try {
+      const res = await fetchImpl(url, opts);
+      if (res.ok) return res;
+    } catch { /* retry below */ }
+    await new Promise((r) => setTimeout(r, delayMs));
+    return fetchImpl(url, opts);
+  };
+}
+
+/** Throws unless a payload has the shape the pages rely on. */
+export function validatePayload(key, p) {
+  if (!p || typeof p !== 'object') throw new Error('payload is not an object');
+  if (key === 'weather') {
+    const ok = Array.isArray(p.cities) && p.cities.length > 0 &&
+      p.cities.every((c) => c && c.current && Number.isFinite(c.current.temperature) && Array.isArray(c.daily));
+    if (!ok) throw new Error('invalid weather payload');
+  } else if (key !== 'status') {
+    const ok = Array.isArray(p.items) && p.items.some((i) => i && typeof i.title === 'string' && i.title.trim());
+    if (!ok) throw new Error('invalid feed payload');
+  }
+  return p;
+}
+
 async function fetchHn(fetchImpl) {
   const ids = (await get(fetchImpl, `${HN}/topstories.json`, 'json')).slice(0, 10);
   const items = [];
   let dropped = 0;
-  for (const id of ids) {
-    const it = await get(fetchImpl, `${HN}/item/${id}.json`, 'json');
+  const fetched = await Promise.all(ids.map((id) => get(fetchImpl, `${HN}/item/${id}.json`, 'json')));
+  for (const [n, it] of fetched.entries()) {
+    const id = ids[n];
     if (!it || !it.title) { dropped++; continue; }
     items.push({ title: it.title, url: it.url || `https://news.ycombinator.com/item?id=${id}`, score: it.score, by: it.by, descendants: it.descendants ?? 0, time: it.time });
   }
@@ -67,7 +95,8 @@ async function fetchWeather(fetchImpl) {
 /**
  * Run every fetch. Returns the status object. `dir` and `fetchImpl` are injectable for tests.
  */
-export async function fetchAll({ fetchImpl = fetch, dir = path.join(ROOT, 'data'), now = new Date() } = {}) {
+export async function fetchAll({ fetchImpl = fetch, dir = path.join(ROOT, 'data'), now = new Date(), retryDelayMs = RETRY_DELAY_MS } = {}) {
+  fetchImpl = withRetry(fetchImpl, retryDelayMs);
   const jobs = {
     news: () => fetchFeed(fetchImpl, FEEDS.news),
     tech: () => fetchFeed(fetchImpl, FEEDS.tech),
@@ -82,7 +111,7 @@ export async function fetchAll({ fetchImpl = fetch, dir = path.join(ROOT, 'data'
   for (const [key, job] of Object.entries(jobs)) {
     try {
       const { items, cities, dropped } = await job();
-      const payload = { fetchedAt: now.toISOString(), source: urls[key], ...(cities ? { cities } : { items }) };
+      const payload = validatePayload(key, { fetchedAt: now.toISOString(), source: urls[key], ...(cities ? { cities } : { items }) });
       fs.writeFileSync(path.join(dir, key + '.json'), JSON.stringify(payload, null, 2) + '\n');
       sources[key] = { ok: true, fetchedAt: payload.fetchedAt, items: (items || cities).length, dropped, url: urls[key] };
     } catch (e) {
@@ -95,8 +124,15 @@ export async function fetchAll({ fetchImpl = fetch, dir = path.join(ROOT, 'data'
   return status;
 }
 
+/** Markdown table for the Actions run summary. */
+export function summaryMarkdown(status) {
+  const rows = Object.entries(status.sources).map(([k, s]) => `| ${k} | ${s.ok ? 'ok' : 'FAILED'} | ${s.ok ? s.items : String(s.error || '').replace(/\|/g, '/')} |`);
+  return ['### Live data fetch', '', '| Source | Result | Items or error |', '| --- | --- | --- |', ...rows, ''].join('\n');
+}
+
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const status = await fetchAll();
   for (const [k, s] of Object.entries(status.sources)) console.log(`${k.padEnd(8)} ${s.ok ? 'ok' : 'FAILED ' + s.error}`);
+  if (process.env.GITHUB_STEP_SUMMARY) fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, summaryMarkdown(status));
   // Exit 0 even on partial failure: stale data is a feature (page 666 reports it).
 }
