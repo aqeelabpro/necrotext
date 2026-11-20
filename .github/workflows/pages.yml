@@ -23,10 +23,14 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: Test on the bundled sample data (blocking)
+        run: npm test
       - name: Fetch live data (failures are reported on page 666, not fatal)
         run: npm run fetch-data
         continue-on-error: true
-      - run: npm test
+      - name: Test on live data (informational, never blocks deploy)
+        run: npm test
+        continue-on-error: true
       - run: npm run build
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

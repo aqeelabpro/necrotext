@@ -19,6 +19,8 @@ let current = null;
 let searching = null; // {label}
 let ghost = null; // {msg, shown, until}
 let flashOn = true;
+let rollTimer = null; // only one page roll runs at a time
+let pending = null; // {page, sub} requested but not yet shown
 let lastSubTurn = Date.now();
 const day = (() => { const d = new Date(); return d.getFullYear() * 400 + d.getMonth() * 32 + d.getDate(); })();
 
@@ -33,7 +35,10 @@ function load() {
 }
 
 function go(page, sub = 1) {
+  clearInterval(rollTimer);
+  pending = { page, sub };
   if (reduceMotion) {
+    pending = null;
     st = { ...st, page, sub, reveal: false };
     load();
     return;
@@ -43,12 +48,13 @@ function go(page, sub = 1) {
   const to = Number(page);
   const steps = 8;
   let i = 0;
-  const timer = setInterval(() => {
+  rollTimer = setInterval(() => {
     i++;
     const n = i >= steps ? to : Math.round(from + ((to - from) * i) / steps);
     searching = { label: 'P' + String(n).padStart(3, '0') };
     if (i >= steps) {
-      clearInterval(timer);
+      clearInterval(rollTimer);
+      pending = null;
       searching = null;
       st = { ...st, page, sub, reveal: false };
       load();
@@ -58,8 +64,10 @@ function go(page, sub = 1) {
 
 function handle(key) {
   const env = { subCount: current ? current.subCount : 1, fastext: current ? current.fastext : [], step: stepPage };
-  const result = press(st, key, env);
-  st = result.state;
+  // step from the requested page while a roll is still running
+  const base = pending ? { ...st, page: pending.page, sub: pending.sub } : st;
+  const result = press(base, key, env);
+  st = pending && result.go ? { ...result.state, page: st.page, sub: st.sub } : result.state;
   if (key !== 'm' && !st.muted) beep(key.length === 1 && /\d/.test(key) ? 660 : 880);
   if (result.go) go(result.go.page, result.go.sub);
   else if (current && current.sub !== st.sub) {
@@ -71,10 +79,11 @@ function handle(key) {
   applyClasses(document.body, st);
 }
 
+const APP_KEYS = /^[0-9rgybxscmh?+\-=]$/i;
 addEventListener('keydown', (e) => {
   if (e.ctrlKey || e.metaKey || e.altKey) return;
   const fk = /^F[1-4]$/.test(e.key) ? e.key : null;
-  if (fk || e.key.length === 1 || e.key.startsWith('Arrow') || ['Enter', 'Escape', 'Backspace'].includes(e.key)) {
+  if (fk || APP_KEYS.test(e.key) || e.key.startsWith('Arrow') || ['Enter', 'Escape', 'Backspace'].includes(e.key)) {
     e.preventDefault();
     handle(e.key);
   }
