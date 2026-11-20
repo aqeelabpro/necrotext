@@ -3,7 +3,7 @@
 import fs from 'node:fs';
 import readline from 'node:readline';
 import { fileURLToPath } from 'node:url';
-import { renderPage, pageIds } from '../src/pages/registry.js';
+import { renderPage, pageIds, hasPage } from '../src/pages/registry.js';
 import { loadDataSync } from '../src/data/node-load.js';
 import { SOURCES, sourceState } from '../src/data/store.js';
 import { toText } from '../src/teletext/render.js';
@@ -62,6 +62,7 @@ const IMPL = {
   },
   check_page({ page } = {}) {
     if (page !== undefined && !validPage(page)) return fail('page must be a three digit string such as "100"');
+    if (page !== undefined && !hasPage(page)) return fail(`page ${page} is not registered`);
     const { pages, problems } = checkPages(ctx(), page);
     if (problems.length) return fail(`FAIL: ${problems.length} problems in ${pages} pages\n${problems.join('\n')}`);
     return ok(`PASS: ${pages} pages checked`);

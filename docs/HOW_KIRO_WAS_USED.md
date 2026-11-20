@@ -109,5 +109,5 @@ Screenshots through the Playwright power found real defects that unit tests had 
 2. Open the MCP panel and confirm the `necrotext` server starts (`node scripts/mcp-server.js`) and lists four tools.
 3. Switch to the `page-designer` agent and ask: "Render page 400 through MCP." Confirm it calls `render_page`. Check that the permission rules were accepted. Fix the front matter if the IDE reports a format error.
 4. Switch to `broadcast-reviewer` and confirm it cannot write files.
-5. Import the power from `powers/necrotext-teletext/` and confirm both skills appear.
+5. Import the power from `powers/necrotext-teletext/` and confirm both skills appear. Its `mcp.json` starts `node scripts/mcp-server.js` with a repo-relative path, so it only works when the repo is the workspace root. If the server does not start, open the repo as the workspace.
 6. Change anything that fails above, and edit this page so it says only what you saw.

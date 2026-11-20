@@ -128,6 +128,19 @@ test('seedFromLive copies valid live files and skips invalid or failed ones', as
   assert.equal(st.sources.tech.fallback, true);
 });
 
+test('seedFromLive skips sources whose live status entry is not ok', async () => {
+  const dir = tmp();
+  fs.writeFileSync(path.join(dir, 'news.json'), '{"sample":true}');
+  const serve = async (url) => {
+    const name = String(url).split('/').pop();
+    if (name === 'status.json') return { ok: true, json: async () => ({ sources: { news: 'bogus', tech: { ok: false } } }) };
+    return { ok: true, json: async () => ({ items: [{ title: 'x' }] }) };
+  };
+  const r = await seedFromLive({ fetchImpl: serve, dir, base: 'https://x.test/data/' });
+  assert.equal(r.seeded.length, 0);
+  assert.equal(fs.readFileSync(path.join(dir, 'news.json'), 'utf8'), '{"sample":true}');
+});
+
 test('seedFromLive leaves everything alone when the site is unreachable', async () => {
   const dir = tmp();
   fs.writeFileSync(path.join(dir, 'news.json'), '{"sample":true}');

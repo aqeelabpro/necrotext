@@ -47,6 +47,12 @@ test('bad tool input is an isError result, unknown tool is a JSON-RPC error', ()
   assert.equal(call('nope', {}).error.code, -32602);
 });
 
+test('check_page rejects a well formed page number that is not registered', () => {
+  const res = call('check_page', { page: '999' });
+  assert.equal(res.result.isError, true);
+  assert.match(textOf(res), /not registered/);
+});
+
 test('check_page passes for all pages and for one page', () => {
   assert.match(textOf(call('check_page', {})), /^PASS: \d+ pages/);
   assert.match(textOf(call('check_page', { page: '666' })), /^PASS/);

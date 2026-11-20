@@ -27,7 +27,7 @@ Kiro shaped the work at every level:
 - **Property tests:** a hand-rolled seeded `forAll` with shrinking pushes hostile feed data through every page.
 - **Agents in a sandboxed Kiro session** built it: a planner, coder sub-agents and a reviewer. The planner used the Playwright power to take real browser screenshots, which found display bugs the unit tests could not.
 
-Honest note: the hooks, agents, MCP wiring and power are covered by tests but I confirmed them in the Kiro IDE only as far as the write-up says. See `docs/HOW_KIRO_WAS_USED.md`.
+Honest note: the hooks, agents, MCP wiring and power are covered by tests but they have not yet been confirmed running inside the Kiro IDE. The owner checklist in the write-up lists what to check. See `docs/HOW_KIRO_WAS_USED.md`.
 
 ## Challenges
 - Serial attributes: some codes act at their own cell and others on the next.

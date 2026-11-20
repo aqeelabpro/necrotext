@@ -37,7 +37,7 @@ export async function seedFromLive({ fetchImpl = fetch, dir = path.join(ROOT, 'd
   for (const key of SOURCES) {
     try {
       const entry = liveStatus.sources[key];
-      if (!entry || entry.fallback) throw new Error('no live entry');
+      if (!entry || typeof entry !== 'object' || entry.ok !== true || entry.fallback) throw new Error('no live entry');
       const payload = validatePayload(key, await getJson(fetchImpl, `${root}${key}.json`));
       fs.writeFileSync(path.join(dir, key + '.json'), JSON.stringify(payload, null, 2) + '\n');
       status.sources[key] = entry;
